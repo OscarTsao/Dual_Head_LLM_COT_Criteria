@@ -45,7 +45,38 @@ pip install -e '.[dev]'
 
 ## Quick Start
 
-### 1. Prepare Your Data
+### Option A: Using ReDSM5 Dataset (Depression Criteria Detection)
+
+We provide a pre-configured setup for the **ReDSM5** dataset - a Reddit dataset for DSM-5 depression detection with expert clinical rationales.
+
+#### 1. Prepare ReDSM5 Data
+
+```bash
+python scripts/prepare_redsm5.py
+```
+
+This will create train/eval/test splits in `data/redsm5_processed/`:
+- **1,038 training samples** (788 positive, 250 negative)
+- **223 evaluation samples** (169 positive, 54 negative)
+- **223 test samples** (169 positive, 54 negative)
+
+#### 2. Train on ReDSM5
+
+```bash
+python scripts/train.py --config configs/redsm5_config.yaml
+```
+
+#### 3. Evaluate on ReDSM5
+
+```bash
+python scripts/evaluate.py \
+  --config configs/redsm5_config.yaml \
+  --checkpoint outputs/redsm5_dhrd_experiment/best_model.pt
+```
+
+### Option B: Using Custom Data
+
+#### 1. Prepare Your Data
 
 Create a JSON file with input-label-rationale triplets:
 
@@ -61,7 +92,7 @@ Create a JSON file with input-label-rationale triplets:
 
 See `data/example_train.json` for examples.
 
-### 2. Configure Your Experiment
+#### 2. Configure Your Experiment
 
 Edit `configs/dhrd_config.yaml`:
 
@@ -81,7 +112,7 @@ training:
   learning_rate: 5.0e-5
 ```
 
-### 3. Train the Model
+#### 3. Train the Model
 
 ```bash
 python scripts/train.py --config configs/dhrd_config.yaml
@@ -94,7 +125,7 @@ Optional arguments:
 - `--device`: cuda or cpu
 - `--checkpoint`: Resume from checkpoint
 
-### 4. Evaluate the Model
+#### 4. Evaluate the Model
 
 ```bash
 python scripts/evaluate.py \
@@ -234,9 +265,62 @@ Run tests:
 pytest
 ```
 
+## ReDSM5 Dataset
+
+This repository includes support for the **ReDSM5** dataset - a corpus of 1,484 Reddit posts annotated for DSM-5 major depressive episode symptoms by licensed psychologists.
+
+### Dataset Statistics
+
+- **Total Posts**: 1,484
+- **Binary Classification**:
+  - Positive (criteria present): 1,126 posts (75.9%)
+  - Negative (no criteria): 358 posts (24.1%)
+- **Clinical Rationales**: Expert explanations from psychologists
+- **Average Post Length**: 295 words
+- **Average Rationale Length**: 77 words
+
+### DSM-5 Symptoms Covered
+
+The dataset includes annotations for 9 DSM-5 major depressive episode symptoms:
+- Depressed mood
+- Anhedonia (loss of interest)
+- Appetite changes
+- Sleep issues
+- Psychomotor changes
+- Fatigue
+- Worthlessness/guilt
+- Cognitive issues
+- Suicidal thoughts
+
+### Data Preparation
+
+```bash
+# Convert ReDSM5 to DHRD format
+python scripts/prepare_redsm5.py
+
+# This creates:
+# - data/redsm5_processed/train.json (1,038 samples)
+# - data/redsm5_processed/eval.json (223 samples)
+# - data/redsm5_processed/test.json (223 samples)
+```
+
+### Training on ReDSM5
+
+```bash
+# Train DHRD model on ReDSM5
+python scripts/train.py --config configs/redsm5_config.yaml
+
+# Evaluate
+python scripts/evaluate.py \
+  --config configs/redsm5_config.yaml \
+  --checkpoint outputs/redsm5_dhrd_experiment/best_model.pt
+```
+
+See `data/redsm5_processed/README.md` for detailed documentation.
+
 ## Citation
 
-If you use this implementation, please cite the original paper:
+If you use this implementation, please cite the DHRD paper:
 
 ```bibtex
 @article{xu2025dualhead,
@@ -244,6 +328,21 @@ If you use this implementation, please cite the original paper:
   author={Xu, Jillian and Zhou, Dylan and Shukla, Vinay and Yang, Yang and Ruan, Junrui and Lin, Shuhuai and Zou, Wenfei and Liu, Yinxiao and Lakshmanan, Karthik},
   journal={arXiv preprint arXiv:2509.21487},
   year={2025}
+}
+```
+
+If you use the ReDSM5 dataset, please also cite:
+
+```bibtex
+@misc{bao2025redsm5,
+  title        = {ReDSM5: A Reddit Dataset for DSM-5 Depression Detection},
+  author       = {Eliseo Bao and Anxo Pérez and Javier Parapar},
+  year         = {2025},
+  eprint       = {2508.03399},
+  archivePrefix= {arXiv},
+  primaryClass = {cs.CL},
+  url          = {https://arxiv.org/abs/2508.03399},
+  note         = {Accepted at CIKM 2025}
 }
 ```
 

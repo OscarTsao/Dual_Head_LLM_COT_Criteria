@@ -21,6 +21,10 @@ dependencies = [
   "transformers>=4.40",
   # Choose an appropriate torch build for your platform/GPU
   "torch>=2.2; platform_system != 'Darwin'",
+  "pyyaml>=6.0",
+  "scikit-learn>=1.3",
+  "tqdm>=4.65",
+  "numpy>=1.24",
 ]
 
 [project.optional-dependencies]

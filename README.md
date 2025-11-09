@@ -90,8 +90,6 @@ Create a JSON file with input-label-rationale triplets:
 ]
 ```
 
-See `data/example_train.json` for examples.
-
 #### 2. Configure Your Experiment
 
 Edit `configs/dhrd_config.yaml`:
@@ -138,10 +136,13 @@ python scripts/evaluate.py \
 ```
 .
 ├── configs/
-│   └── dhrd_config.yaml          # Experiment configuration
+│   ├── dhrd_config.yaml          # Example configuration
+│   └── redsm5_config.yaml        # ReDSM5 dataset configuration
 ├── data/
-│   └── example_train.json        # Example dataset
+│   ├── redsm5/                   # Original ReDSM5 dataset
+│   └── redsm5_processed/         # Processed for DHRD training
 ├── scripts/
+│   ├── prepare_redsm5.py         # ReDSM5 data preparation
 │   ├── train.py                  # Training script
 │   └── evaluate.py               # Evaluation script
 ├── src/Project/SubProject/
